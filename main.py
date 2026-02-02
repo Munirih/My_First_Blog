@@ -22,21 +22,9 @@ load_dotenv()
 user_email = os.environ.get('USER_EMAIL')
 user_password = os.environ.get('USER_PASSWORD')
 
-'''
-Make sure the required packages are installed: 
-Open the Terminal in PyCharm (bottom left). 
-
-On Windows type:
-python -m pip install -r requirements.txt
-
-On MacOS type:
-pip3 install -r requirements.txt
-
-This will install the packages from the requirements.txt for this project.
-'''
 
 app = Flask(__name__)
-app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY')
+app.config['SECRET_KEY'] = os.environ.get('FLASK_KEY')
 Bootstrap5(app)
 ckeditor = CKEditor(app)
 
@@ -74,6 +62,11 @@ def admin_only(f):
 @app.context_processor
 def inject_gravatar():
     return dict(gravatar_url=gravatar_url)
+
+
+@app.context_processor
+def inject_current_year():
+    return {"current_year": date.today().year}
 
 
 # CREATE DATABASE
@@ -189,8 +182,7 @@ def get_all_posts():
     # TODO: Query the database for all the posts. Convert the data to a python list.
     results = db.session.execute(db.select(BlogPost))
     posts = results.scalars().all()
-    year = date.today().year
-    return render_template("index.html", all_posts=posts, year=year)
+    return render_template("index.html", all_posts=posts)
 
 
 # TODO: Add a route so that you can click on individual posts.
@@ -315,4 +307,4 @@ def delete_comment(comment_id):
 
 
 if __name__ == "__main__":
-    app.run(debug=False)
+    app.run(debug=True, port=5003)
