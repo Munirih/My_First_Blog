@@ -203,7 +203,7 @@ def show_post(post_id):
         new_comment = Comment(
             author_id=current_user.id,
             post_id=requested_post.id,
-            text=cleanify(comment_form.comment_text.data))
+            text=comment_form.comment_text.data)
         db.session.add(new_comment)
         db.session.commit()
         return redirect(url_for('show_post', post_id=post_id))
@@ -307,4 +307,4 @@ def delete_comment(comment_id):
 
 
 if __name__ == "__main__":
-    app.run(debug=False)
+    app.run(debug=True, port=5003)
